@@ -1,12 +1,12 @@
 import "./Loader.css";
 
-const Loader = ({ label = "Loading…" }) => {
+function Loader({ label = "Loading..." }) {
   return (
-    <div className="loader">
-      <div className="loader__spinner" />
-      <p className="loader__label">{label}</p>
-    </div>
+    <section className="loader">
+      <div className="loader__spinner"></div>
+      <span className="loader__label">{label}</span>
+    </section>
   );
-};
+}
 
 export default Loader;

@@ -1,13 +1,20 @@
 import axios from "axios";
 
-const BASE_URL = "https://dummyjson.com/products";
+const api = axios.create({
+  baseURL: "https://dummyjson.com/products",
+});
 
-export const getAllProducts = async () => {
-  const response = await axios.get(`${BASE_URL}?limit=194`);
-  return response.data.products;
-};
+export async function getAllProducts() {
+  const { data } = await api.get("", {
+    params: {
+      limit: 194,
+    },
+  });
 
-export const getProductById = async (id) => {
-  const response = await axios.get(`${BASE_URL}/${id}`);
-  return response.data;
-};
+  return data.products;
+}
+
+export async function getProductById(productId) {
+  const { data } = await api.get(`/${productId}`);
+  return data;
+}

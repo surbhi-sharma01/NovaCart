@@ -1,56 +1,72 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getProductById } from "../api/products";
 import { useCart } from "../context/CartContext";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 import "./ProductDetails.css";
 
-const ProductDetails = () => {
+function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const { addToCart } = useCart();
 
-  const [product, setProduct] = useState(null);
-  const [activeImage, setActiveImage] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [justAdded, setJustAdded] = useState(false);
+  const [productData, setProductData] = useState(null);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    async function loadProduct() {
       try {
-        setIsLoading(true);
         const data = await getProductById(id);
-        setProduct(data);
-        setActiveImage(data.images?.[0] || data.thumbnail);
-        setError(null);
-      } catch (err) {
-        console.error(err);
-        setError("Could not load this product. Please try again later.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
-    fetchProduct();
+        setProductData(data);
+        setSelectedImage(data.images?.[0] || data.thumbnail);
+        setFetchError(null);
+      } catch (error) {
+        console.error(error);
+        setFetchError("Unable to load product details.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProduct();
   }, [id]);
 
-  const handleAddToCart = () => {
-    addToCart(product);
-    setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 1800);
-  };
+  function addItem() {
+    addToCart(productData);
+    setAdded(true);
 
-  if (isLoading) return <Loader label="Loading product…" />;
-  if (error) return <ErrorMessage message={error} />;
-  if (!product) return null;
+    setTimeout(() => {
+      setAdded(false);
+    }, 1800);
+  }
 
-  const images = product.images?.length ? product.images : [product.thumbnail];
+  if (loading) {
+    return <Loader label="Loading product..." />;
+  }
+
+  if (fetchError) {
+    return <ErrorMessage message={fetchError} />;
+  }
+
+  if (!productData) return null;
+
+  const gallery =
+    productData.images?.length > 0
+      ? productData.images
+      : [productData.thumbnail];
 
   return (
     <div className="page-container">
-      <button className="back-link" onClick={() => navigate(-1)}>
+      <button
+        className="back-link"
+        onClick={() => navigate(-1)}
+      >
         ← Back
       </button>
 
@@ -58,23 +74,24 @@ const ProductDetails = () => {
         <div className="product-details__gallery">
           <div className="product-details__main-image-wrap">
             <img
-              src={activeImage}
-              alt={product.title}
+              src={selectedImage}
+              alt={productData.title}
               className="product-details__main-image"
             />
           </div>
-          {images.length > 1 && (
+
+          {gallery.length > 1 && (
             <div className="product-details__thumbnails">
-              {images.map((img, index) => (
+              {gallery.map((image, index) => (
                 <button
                   key={index}
                   className={`product-details__thumb-btn ${
-                    img === activeImage ? "is-active" : ""
+                    selectedImage === image ? "is-active" : ""
                   }`}
-                  onClick={() => setActiveImage(img)}
-                  aria-label={`View image ${index + 1} of ${product.title}`}
+                  onClick={() => setSelectedImage(image)}
+                  aria-label={`Product image ${index + 1}`}
                 >
-                  <img src={img} alt="" />
+                  <img src={image} alt="" />
                 </button>
               ))}
             </div>
@@ -82,17 +99,28 @@ const ProductDetails = () => {
         </div>
 
         <div className="product-details__info">
-          <h1 className="product-details__title">{product.title}</h1>
-          <p className="product-details__price">${product.price}</p>
-          <p className="product-details__description">{product.description}</p>
+          <h1 className="product-details__title">
+            {productData.title}
+          </h1>
 
-          <button className="add-to-cart-btn" onClick={handleAddToCart}>
-            {justAdded ? "Added to Cart ✓" : "Add to Cart"}
+          <p className="product-details__price">
+            ${productData.price}
+          </p>
+
+          <p className="product-details__description">
+            {productData.description}
+          </p>
+
+          <button
+            className="add-to-cart-btn"
+            onClick={addItem}
+          >
+            {added ? "Added to Cart ✓" : "Add to Cart"}
           </button>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default ProductDetails;

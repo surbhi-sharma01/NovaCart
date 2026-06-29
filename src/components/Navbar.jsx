@@ -2,20 +2,21 @@ import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import "./Navbar.css";
 
-const Navbar = () => {
-  const { cartCount } = useCart();
+function Navbar() {
+  const { cartCount: totalItems } = useCart();
 
   return (
     <header className="navbar">
-      <Link to="/" className="navbar__brand">
+      <Link className="navbar__brand" to="/">
         NovaCart
       </Link>
-      <Link to="/cart" className="navbar__cart-link">
+
+      <Link className="navbar__cart-link" to="/cart">
         Cart
-        <span className="navbar__cart-count">{cartCount}</span>
+        <span className="navbar__cart-count">{totalItems}</span>
       </Link>
     </header>
   );
-};
+}
 
 export default Navbar;

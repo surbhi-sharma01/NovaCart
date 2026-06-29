@@ -5,42 +5,49 @@ import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 import "./ProductListing.css";
 
-const ProductListing = () => {
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+function ProductListing() {
+  const [productList, setProductList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getAllProducts();
-        setProducts(data);
-        setError(null);
-      } catch (err) {
-        console.error(err);
-        setError("Could not load products. Please try again later.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    async function loadProducts() {
+      setLoading(true);
 
-    fetchProducts();
+      try {
+        const products = await getAllProducts();
+        setProductList(products);
+        setErrorMessage("");
+      } catch (error) {
+        console.error(error);
+        setErrorMessage("Could not load products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProducts();
   }, []);
 
-  if (isLoading) return <Loader label="Loading products…" />;
-  if (error) return <ErrorMessage message={error} />;
+  if (loading) {
+    return <Loader label="Loading products..." />;
+  }
+
+  if (errorMessage) {
+    return <ErrorMessage message={errorMessage} />;
+  }
 
   return (
     <div className="page-container">
       <h1 className="listing-heading">Shop Our Collection</h1>
+
       <div className="product-grid">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {productList.map((item) => (
+          <ProductCard key={item.id} product={item} />
         ))}
       </div>
     </div>
   );
-};
+}
 
 export default ProductListing;
