@@ -1,33 +1,54 @@
-# Shopline — React + Vite E-Commerce App
+# NovaCart
 
-A simple e-commerce app built with React, Vite, and the [DummyJSON](https://dummyjson.com/) products API.
+NovaCart is a modern e-commerce web application built with React and Vite. It allows users to browse products, view product details, and manage a shopping cart through a clean and responsive interface.
 
 ## Features
 
-- **Product Listing (`/`)** — fetches all products and displays them in a responsive grid (image, title, price).
-- **Product Details (`/product/:id`)** — fetches a single product, shows its image gallery, title, description, price, and an "Add to Cart" button.
-- **Cart (`/cart`)** — lists cart items with title, price, quantity (adjustable), and line total, plus a bill summary (subtotal and total amount).
+- Browse products in a responsive grid
+- View detailed product information
+- Add products to the shopping cart
+- Update product quantities in the cart
+- Responsive design for desktop and mobile devices
+- Fetches product data using Axios
 
 ## Tech Stack
 
-- React + Vite
-- React Router DOM (routing)
-- Axios (data fetching)
-- Context API (cart state)
+- React
+- Vite
+- React Router DOM
+- Axios
+- Context API
+- CSS
 
 ## Getting Started
 
+### Install dependencies
+
 ```bash
 npm install
+```
+
+### Run the development server
+
+```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`.
+The application will be available at:
 
-To create a production build:
+```
+http://localhost:5173
+```
+
+### Build for production
 
 ```bash
 npm run build
+```
+
+### Preview the production build
+
+```bash
 npm run preview
 ```
 
@@ -35,19 +56,23 @@ npm run preview
 
 ```
 src/
-  api/
-    products.js        # Axios calls to DummyJSON API
-  context/
-    CartContext.jsx    # Cart state (add/remove/update quantity)
-  components/
-    Navbar.jsx          # Top nav with cart link/count
-    ProductCard.jsx      # Card used in the product grid
-    Loader.jsx           # Loading state
-    ErrorMessage.jsx     # Error state
-  pages/
-    ProductListing.jsx   # / route
-    ProductDetails.jsx   # /product/:id route
-    Cart.jsx              # /cart route
-  App.jsx                 # Routes
-  main.jsx                # App entry, providers
+├── api/
+│   └── products.js
+├── components/
+│   ├── Navbar.jsx
+│   ├── ProductCard.jsx
+│   ├── Loader.jsx
+│   └── ErrorMessage.jsx
+├── context/
+│   └── CartContext.jsx
+├── pages/
+│   ├── ProductListing.jsx
+│   ├── ProductDetails.jsx
+│   └── Cart.jsx
+├── App.jsx
+└── main.jsx
 ```
+
+## Author
+
+**Surbhi Sharma**
