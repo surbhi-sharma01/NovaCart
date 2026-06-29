@@ -1,0 +1,9 @@
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: var(--color-danger);
+  font-weight: 600;
+  text-align: center;
+}
